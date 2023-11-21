@@ -1,0 +1,17 @@
+{
+  "domain": "BJ_LED",
+  "name": "BJ LED Controller",
+  "bluetooth": [
+      { "local_name": "BJ_LED" }
+    ],
+  "codeowners": ["@8none1"],
+  "config_flow": true,
+  "dependencies": ["bluetooth"],
+  "documentation": "https://github.com/8none1/BJ_LED",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/8none1/BJ_LED/issues",
+  "requirements": ["bleak-retry-connector>=1.17.1","bleak>=0.17.0"],
+  "version": "0.0.1",
+  "integration_type": "device",
+  "loggers": ["custom_components.bj_led"]
+}
