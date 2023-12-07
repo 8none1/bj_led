@@ -22,52 +22,52 @@ import logging
 
 LOGGER = logging.getLogger(__name__)
 
-EFFECT_COLORLOOP = "colorloop"
-EFFECT_RED_FADE = "red_fade"
-EFFECT_GREEN_FADE = "green_fade"
-EFFECT_BLUE_FADE = "blue_fade"
-EFFECT_YELLOW_FADE = "yellow_fade"
-EFFECT_CYAN_FADE = "cyan_fade"
-EFFECT_PURPLE_FADE = "purple_fade"
-EFFECT_WHITE_FADE = "white_fade"
+EFFECT_0x00 = "colorloop"
+EFFECT_0x01 = "red_fade"
+EFFECT_0x02 = "green_fade"
+EFFECT_0x03 = "blue_fade"
+EFFECT_0x04 = "yellow_fade"
+EFFECT_0x05 = "cyan_fade"
+EFFECT_0x06 = "purple_fade"
+EFFECT_0x07 = "white_fade"
 EFFECT_RED_GREEN_BLUE_CROSS_FADE = "rgb_cross_fade"
-EFFECT_RED_GREEN_CROSS_FADE = "rg_cross_fade"
-EFFECT_RED_BLUE_CROSS_FADE = "rb_cross_fade"
-EFFECT_GREEN_BLUE_CROSS_FADE = "gb_cross_fade"
-EFFECT_COLORSTROBE = "colorstrobe"
-EFFECT_RED_STROBE = "red_strobe"
-EFFECT_GREEN_STROBE = "green_strobe"
-EFFECT_BLUE_STROBE = "blue_strobe"
-EFFECT_YELLOW_STROBE = "yellow_strobe"
-EFFECT_CYAN_STROBE = "cyan_strobe"
-EFFECT_PURPLE_STROBE = "purple_strobe"
-EFFECT_WHITE_STROBE = "white_strobe"
+EFFECT_0x08 = "rg_cross_fade"
+EFFECT_0x09 = "rb_cross_fade"
+EFFECT_0x0a = "gb_cross_fade"
+EFFECT_0x0c = "colorstrobe"
+EFFECT_0x0d = "red_strobe"
+EFFECT_0x0e = "green_strobe"
+EFFECT_0x0f = "blue_strobe"
+EFFECT_0x10 = "yellow_strobe"
+EFFECT_0x11 = "cyan_strobe"
+EFFECT_0x12 = "purple_strobe"
+EFFECT_0x13 = "white_strobe"
 EFFECT_CYCLE_RGB = "cycle_rgb"
 EFFECT_CYCLE_SEVEN_COLORS = "cycle_seven_colors"
-EFFECT_COLORJUMP = "colorjump"
+EFFECT_0x14 = "colorjump"
 EFFECT_CUSTOM = "custom"
 
 EFFECT_MAP = {
-    EFFECT_COLORLOOP:               0x00,
-    EFFECT_RED_FADE:                0x01,
-    EFFECT_GREEN_FADE:              0x02,
-    EFFECT_BLUE_FADE:               0x03,
-    EFFECT_YELLOW_FADE:             0x04,
-    EFFECT_CYAN_FADE:               0x05,
-    EFFECT_PURPLE_FADE:             0x06,
-    EFFECT_WHITE_FADE:              0x07,
-    EFFECT_RED_GREEN_CROSS_FADE:    0x08,
-    EFFECT_RED_BLUE_CROSS_FADE:     0x09,
-    EFFECT_GREEN_BLUE_CROSS_FADE:   0x0a,
-    EFFECT_COLORSTROBE:             0x0c,
-    EFFECT_RED_STROBE:              0x0d,
-    EFFECT_GREEN_STROBE:            0x0e,
-    EFFECT_BLUE_STROBE:             0x0f,
-    EFFECT_YELLOW_STROBE:           0x10,
-    EFFECT_CYAN_STROBE:             0x11,
-    EFFECT_PURPLE_STROBE:           0x12,
-    EFFECT_WHITE_STROBE:            0x13,
-    EFFECT_COLORJUMP:               0x14,
+    EFFECT_0x00:    0x00,
+    EFFECT_0x01:    0x01,
+    EFFECT_0x02:    0x02,
+    EFFECT_0x03:    0x03,
+    EFFECT_0x04:    0x04,
+    EFFECT_0x05:    0x05,
+    EFFECT_0x06:    0x06,
+    EFFECT_0x07:    0x07,
+    EFFECT_0x08:    0x08,
+    EFFECT_0x09:    0x09,
+    EFFECT_0x0a:    0x0a,
+    EFFECT_0x0c:    0x0c,
+    EFFECT_0x0d:    0x0d,
+    EFFECT_0x0e:    0x0e,
+    EFFECT_0x0f:    0x0f,
+    EFFECT_0x10:    0x10,
+    EFFECT_0x11:    0x11,
+    EFFECT_0x12:    0x12,
+    EFFECT_0x13:    0x13,
+    EFFECT_0x14:    0x14,
 }
 
 EFFECT_LIST = sorted(EFFECT_MAP)
@@ -240,7 +240,7 @@ class BJLEDInstance:
         LOGGER.debug('Effect ID: %s', effect_id)
         LOGGER.debug('Effect name: %s', effect)
         effect_packet.append(effect_id)
-        effect_packet.append(0x01) # FIXME: Need to support speed in here too
+        effect_packet.append(0x01) # FIXME: Need to support speed in here too, but can't because there isn't the ability in HA to specify it as far as I can tell.
         await self._write(effect_packet)
     
     @retry_bluetooth_connection_error

@@ -21,9 +21,6 @@ from homeassistant.util.color import (match_max_scale)
 from homeassistant.helpers import device_registry
 from homeassistant.config_entries import ConfigEntry
 
-
-PARALLEL_UPDATES = 0
-
 LOGGER = logging.getLogger(__name__)
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_MAC): cv.string
@@ -33,9 +30,6 @@ async def async_setup_entry(hass, config_entry, async_add_devices):
     instance = hass.data[DOMAIN][config_entry.entry_id]
     await instance.update()
     async_add_devices([BJLEDLight(instance, config_entry.data["name"], config_entry.entry_id)])
-    # config_entry.async_on_unload(
-    #     await instance.stop()
-    # )
 
 class BJLEDLight(LightEntity):
     def __init__(self, BJLEDInstance: BJLEDInstance, name: str, entry_id: str) -> None:
