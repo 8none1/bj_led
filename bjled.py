@@ -17,7 +17,6 @@ from bleak_retry_connector import (
 from typing import Any, TypeVar, cast, Tuple
 from collections.abc import Callable
 import traceback
-import asyncio
 import logging
 
 LOGGER = logging.getLogger(__name__)
@@ -251,6 +250,7 @@ class BJLEDInstance:
                 self._is_on = False
                 self._brightness = 255
                 self._rgb_color = (255, 0, 0)
+                self.available = True
         except (Exception) as error:
             self._is_on = False
             LOGGER.error("Error getting status: %s", error)

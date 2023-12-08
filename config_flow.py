@@ -28,7 +28,6 @@ class DeviceData(BluetoothData):
     def __init__(self, discovery_info) -> None:
         self._discovery = discovery_info
         LOGGER.debug("Discovered bluetooth devices, DeviceData, : %s , %s", self._discovery.address, self._discovery.name)
-        LOGGER.debug(dir(self._discovery))
 
     def supported(self):
         return self._discovery.name.lower().startswith("BJ_LED")
@@ -203,7 +202,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
     async def async_step_user(self, user_input=None):
         """Handle a flow initialized by the user."""
         errors = {}
-        options = self.config_entry.options or {CONF_RESET: False,CONF_DELAY: 120,}
+        options = self.config_entry.options or {CONF_RESET: False,CONF_DELAY: 120}
         if user_input is not None:
             return self.async_create_entry(title="", data={CONF_RESET: user_input[CONF_RESET], CONF_DELAY: user_input[CONF_DELAY]})
 

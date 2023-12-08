@@ -17,9 +17,9 @@ from homeassistant.components.light import (
     LightEntity,
     LightEntityFeature,
 )
-from homeassistant.util.color import (match_max_scale)
+from homeassistant.util.color import match_max_scale
 from homeassistant.helpers import device_registry
-from homeassistant.config_entries import ConfigEntry
+#from homeassistant.config_entries import ConfigEntry
 
 LOGGER = logging.getLogger(__name__)
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
@@ -32,8 +32,8 @@ async def async_setup_entry(hass, config_entry, async_add_devices):
     async_add_devices([BJLEDLight(instance, config_entry.data["name"], config_entry.entry_id)])
 
 class BJLEDLight(LightEntity):
-    def __init__(self, BJLEDInstance: BJLEDInstance, name: str, entry_id: str) -> None:
-        self._instance = BJLEDInstance
+    def __init__(self, bjledinstance: BJLEDInstance, name: str, entry_id: str) -> None:
+        self._instance = bjledinstance
         self._entry_id = entry_id
         self._attr_supported_color_modes = {ColorMode.RGB}
         self._attr_supported_features = LightEntityFeature.EFFECT
@@ -44,7 +44,8 @@ class BJLEDLight(LightEntity):
 
     @property
     def available(self):
-        return self._instance.is_on != None
+        # return self._instance.is_on != None
+        return True # We can't check if the device is available, so we always return True
 
     @property
     def brightness(self):

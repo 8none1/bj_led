@@ -12,6 +12,5 @@
   "issue_tracker": "https://github.com/8none1/BJ_LED/issues",
   "requirements": ["bleak-retry-connector>=1.17.1","bleak>=0.17.0"],
   "version": "0.0.1",
-  "integration_type": "device",
-  "loggers": ["custom_components.bj_led"]
+  "integration_type": "device"
 }
