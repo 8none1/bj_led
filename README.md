@@ -1,7 +1,12 @@
 # BJ_LED
 
-Home Assistant custom integration for BJ LED devices which are not supported on the official LED BLE integration or Flux LED.
+Home Assistant custom integration for BJ_LED devices controlled by the MMohuanLED app over Bluetooth LE.
 
+These were the cheapest LEDs I could find on AliExpress.  5M of 5050 LEDs for £2.67.  The app is basic, but it works.  The IR remote is basic, but it works.  The lights connect to a USB port.
+
+![image](https://github.com/8none1/bj_led/assets/6552931/686eff8b-ab87-4327-b784-ed91d695f957)
+
+I figured it should be pretty easy to get them working, and it was.  I have no intention of adding this to HACS in any offical capacity, but it should work when you add this repo as a custom repo in HACS.
 
 ## Supported devices
 
@@ -18,7 +23,7 @@ MAC address seem to start `FF:FF:xx:xx:xx:xx`.
 - Fancy colour Modes (not speed)
 - Automatic discovery of supported devices
 
-## Not supported and not currently planned
+## Not supported and not planned
 
 - Microphone interactivity
 - Timer / Clock functions
