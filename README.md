@@ -1,8 +1,8 @@
 # BJ_LED
 
-Home Assistant custom integration for BJ_LED devices controlled by the MMohuanLED app over Bluetooth LE.
+Home Assistant custom integration for BJ_LED devices controlled by the MohuanLED app over Bluetooth LE.
 
-These were the cheapest LEDs I could find on AliExpress.  5M of 5050 LEDs for £2.67.  The app is basic, but it works.  The IR remote is basic, but it works.  The lights connect to a USB port.
+These were the cheapest Bluetooth controlled LEDs I could find on AliExpress.  5M of 5050 LEDs for £2.67.  The app is basic, but it works.  The IR remote is basic, but it works.  The lights connect to a USB port.
 
 ![image](https://github.com/8none1/bj_led/assets/6552931/686eff8b-ab87-4327-b784-ed91d695f957)
 

@@ -437,7 +437,6 @@ class BJLEDInstance:
     async def _execute_disconnect(self) -> None:
         """Execute disconnection."""
         async with self._connect_lock:
-            read_char = self._read_uuid
             client = self._client
             self._expected_disconnect = True
             self._client = None
@@ -445,5 +444,4 @@ class BJLEDInstance:
             if client and client.is_connected:
                 await client.disconnect()
             LOGGER.debug("%s: Disconnected", self.name)
-    
     
