@@ -16,8 +16,6 @@ MAC address seem to start `FF:FF:xx:xx:xx:xx`.
 - RGB colour
 - Brightness
 - Fancy colour Modes (not speed)
-
-## Not yet supported but planned
 - Automatic discovery of supported devices
 
 ## Not supported and not currently planned

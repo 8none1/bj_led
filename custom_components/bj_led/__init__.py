@@ -16,10 +16,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     reset = entry.options.get(CONF_RESET, None) or entry.data.get(CONF_RESET, None)
     delay = entry.options.get(CONF_DELAY, None) or entry.data.get(CONF_DELAY, None)
     LOGGER.debug("Config Reset data: %s and config delay data: %s", reset, delay)
+
     instance = BJLEDInstance(entry.data[CONF_MAC], reset, delay, hass)
+    #hass.data.setdefault(DOMAIN, {})[entry.entry_id] = instance
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = instance
-    
+
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(_async_update_listener))
 

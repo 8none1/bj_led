@@ -3,17 +3,17 @@
         "step": {
             "user": {
                 "data": {
-                    "mac": "Bluetooth MAC address",
+                    "mac": "Device:",
                     "name": "Name"
                 },
-                "title": "Pick a LEDnetWF light. Make sure light in sight for validation."
+                "title": "Pick a light. Make sure light in sight for validation."
             },
             "validate": {
                 "data": {
                     "retry": "Retry validate connection?",
                     "flicker": "Did the light blink?"
                 },
-                "title": "Validate LEDnetWF connection"
+                "title": "Validate connection"
             },
             "manual": {
                 "data": {
@@ -24,11 +24,11 @@
             }
         },
         "error": {
-            "connect": "Unable to connect to LEDnetWF"
+            "connect": "Unable to connect"
         },
         "abort": {
-            "cannot_validate": "Unable to validate LEDnetWF light",
-            "cannot_connect": "Unable to connect to LEDnetWF"
+            "cannot_validate": "Unable to validate",
+            "cannot_connect": "Unable to connect"
         }
     },
     "options": {
@@ -41,5 +41,5 @@
             }
         }
     },
-    "title": "LEDnetWF"
+    "title": "BJ_LED"
 }

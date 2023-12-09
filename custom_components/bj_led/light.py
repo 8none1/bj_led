@@ -11,51 +11,78 @@ from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.components.light import (
     PLATFORM_SCHEMA,
     ATTR_BRIGHTNESS,
-    ATTR_EFFECT,
     ATTR_RGB_COLOR,
+#    ATTR_BRIGHTNESS_STEP_PCT,
+#    ATTR_COLOR_TEMP_KELVIN,
+#    ATTR_MIN_COLOR_TEMP_KELVIN,
+#    ATTR_MAX_COLOR_TEMP_KELVIN,
+    ATTR_EFFECT,
+#    ATTR_HS_COLOR,
+#    ATTR_FLASH,
+#    FLASH_SHORT,
+#    FLASH_LONG,
     ColorMode,
     LightEntity,
     LightEntityFeature,
 )
 from homeassistant.util.color import match_max_scale
 from homeassistant.helpers import device_registry
-#from homeassistant.config_entries import ConfigEntry
 
 LOGGER = logging.getLogger(__name__)
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
-    vol.Required(CONF_MAC): cv.string
-})
+PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({vol.Required(CONF_MAC): cv.string})
+
 
 async def async_setup_entry(hass, config_entry, async_add_devices):
     instance = hass.data[DOMAIN][config_entry.entry_id]
     await instance.update()
-    async_add_devices([BJLEDLight(instance, config_entry.data["name"], config_entry.entry_id)])
+    async_add_devices(
+        [BJLEDLight(instance, config_entry.data["name"], config_entry.entry_id)]
+    )
+    #config_entry.async_on_unload(await instance.stop())
+
 
 class BJLEDLight(LightEntity):
-    def __init__(self, bjledinstance: BJLEDInstance, name: str, entry_id: str) -> None:
+    def __init__(
+        self, bjledinstance: BJLEDInstance, name: str, entry_id: str
+    ) -> None:
         self._instance = bjledinstance
         self._entry_id = entry_id
         self._attr_supported_color_modes = {ColorMode.RGB}
-        self._attr_supported_features = LightEntityFeature.EFFECT
-        self._color_mode = ColorMode.RGB
+        self._attr_supported_features = LightEntityFeature.EFFECT | LightEntityFeature.FLASH
+        self._attr_brightness_step_pct = 10
         self._attr_name = name
-        self._effect = None
         self._attr_unique_id = self._instance.mac
-
+        #self._color_temp_kelvin: self._instance._color_temp_kelvin
+        #self._instance.local_callback = self.light_local_callback
+        
     @property
     def available(self):
         # return self._instance.is_on != None
-        return True # We can't check if the device is available, so we always return True
+        return True # We don't know if this is working or not because there is zero feedback from the light, so assume yes
 
     @property
     def brightness(self):
-        if self._instance.brightness:
-            return self._instance.brightness
-        return 255
-
+        return self._instance.brightness
+    
+    # @property
+    # def brightness_step_pct(self):
+    #     return self._attr_brightness_step_pct
+    
     @property
     def is_on(self) -> Optional[bool]:
         return self._instance.is_on
+
+    # @property
+    # def color_temp_kelvin(self):
+    #     return self._instance.color_temp_kelvin
+
+    # @property
+    # def max_color_temp_kelvin(self):
+    #     return self._instance.max_color_temp_kelvin
+
+    # @property
+    # def min_color_temp_kelvin(self):
+    #     return self._instance.min_color_temp_kelvin
 
     @property
     def effect_list(self):
@@ -63,7 +90,7 @@ class BJLEDLight(LightEntity):
 
     @property
     def effect(self):
-        return self._effect
+        return self._instance._effect
 
     @property
     def supported_features(self) -> int:
@@ -75,17 +102,16 @@ class BJLEDLight(LightEntity):
         """Flag supported color modes."""
         return self._attr_supported_color_modes
 
-    @property
-    def rgb_color(self):
-        if self._instance.rgb_color:
-            return self._instance.rgb_color
-        return None
+    # @property
+    # def hs_color(self):
+    #     """Return the hs color value."""
+    #     return self._instance.hs_color
 
     @property
     def color_mode(self):
         """Return the color mode of the light."""
-        return self._color_mode
-        
+        return self._instance._color_mode
+
     @property
     def device_info(self):
         """Return device info."""
@@ -95,7 +121,7 @@ class BJLEDLight(LightEntity):
                 (DOMAIN, self._instance.mac)
             },
             name=self.name,
-            connections={(device_registry.CONNECTION_NETWORK_MAC, self._instance.mac)}
+            connections={(device_registry.CONNECTION_NETWORK_MAC, self._instance.mac)},
         )
 
     @property
@@ -134,3 +160,4 @@ class BJLEDLight(LightEntity):
     async def async_update(self) -> None:
         await self._instance.update()
         self.async_write_ha_state()
+     
