@@ -22,14 +22,10 @@ import logging
 LOGGER = logging.getLogger(__name__)
 DATA_SCHEMA = vol.Schema({("host"): str})
 
-MANUAL_MAC = "manual"
-
-
 class DeviceData(BluetoothData):
     def __init__(self, discovery_info) -> None:
         self._discovery = discovery_info
         LOGGER.debug("Discovered bluetooth devices, DeviceData, : %s , %s", self._discovery.address, self._discovery.name)
-        LOGGER.debug(dir(self._discovery))
 
     def supported(self):
         return self._discovery.name.lower().startswith("bj_led")
@@ -71,7 +67,8 @@ class BJLEDFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         await self.async_set_unique_id(discovery_info.address)
         self._abort_if_unique_id_configured()
         device = DeviceData(discovery_info)
-        self.context["title_placeholders"] = {"name": human_readable_name(None, device.name(), device.address())}
+        #self.context["title_placeholders"] = {"name": human_readable_name(None, device.name(), device.address())}
+        self.context["title_placeholders"] = {"name": device.name()}
         if device.supported():
             self._discovered_devices.append(device)
             return await self.async_step_bluetooth_confirm()
@@ -91,10 +88,7 @@ class BJLEDFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     ) -> FlowResult:
         """Handle the user step to pick discovered device."""
         if user_input is not None:
-#            if user_input[CONF_MAC] == MANUAL_MAC:
-#                return await self.async_step_manual()
             self.mac = user_input[CONF_MAC]
-            # self.name = user_input["name"]
             self.name = self.context["title_placeholders"]["name"]
             await self.async_set_unique_id(self.mac, raise_on_progress=False)
             self._abort_if_unique_id_configured()
@@ -119,12 +113,10 @@ class BJLEDFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         LOGGER.debug("Discovered supported devices: %s - %s", self._discovered_devices[0].name(), self._discovered_devices[0].address())
 
         mac_dict = { dev.address(): dev.name() for dev in self._discovered_devices }
-#        mac_dict[MANUAL_MAC] = "Manually add a MAC address"
         return self.async_show_form(
             step_id="user", data_schema=vol.Schema(
                 {
                     vol.Required(CONF_MAC): vol.In(mac_dict),
-#                    vol.Required("name"): str
                 }
             ),
             errors={})
@@ -176,20 +168,13 @@ class BJLEDFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             self._instance = BJLEDInstance(self.mac, False, 120, self.hass)
         try:
             await self._instance.update()
-            if self._instance.is_on:
-                await self._instance.turn_off()
-                await asyncio.sleep(3)
-                await self._instance.turn_on()
-                await asyncio.sleep(3)
-                await self._instance.turn_off()
-            else:
-                await self._instance.turn_on()
-                await asyncio.sleep(3)
-                await self._instance.turn_off()
-                await asyncio.sleep(3)
-                await self._instance.turn_on()
-                await asyncio.sleep(3)
-                await self._instance.turn_off()
+            await self._instance.turn_on()
+            await asyncio.sleep(1)
+            await self._instance.turn_off()
+            await asyncio.sleep(1)
+            await self._instance.turn_on()
+            await asyncio.sleep(1)
+            await self._instance.turn_off()
         except (Exception) as error:
             return error
         finally:

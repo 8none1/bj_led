@@ -1,7 +1,6 @@
 import logging
 import voluptuous as vol
 from typing import Any, Optional, Tuple
-
 from .bjled import BJLEDInstance
 from .const import DOMAIN
 
@@ -12,25 +11,16 @@ from homeassistant.components.light import (
     PLATFORM_SCHEMA,
     ATTR_BRIGHTNESS,
     ATTR_RGB_COLOR,
-#    ATTR_BRIGHTNESS_STEP_PCT,
-#    ATTR_COLOR_TEMP_KELVIN,
-#    ATTR_MIN_COLOR_TEMP_KELVIN,
-#    ATTR_MAX_COLOR_TEMP_KELVIN,
     ATTR_EFFECT,
-#    ATTR_HS_COLOR,
-#    ATTR_FLASH,
-#    FLASH_SHORT,
-#    FLASH_LONG,
     ColorMode,
     LightEntity,
     LightEntityFeature,
 )
-from homeassistant.util.color import match_max_scale
+
 from homeassistant.helpers import device_registry
 
 LOGGER = logging.getLogger(__name__)
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({vol.Required(CONF_MAC): cv.string})
-
 
 async def async_setup_entry(hass, config_entry, async_add_devices):
     instance = hass.data[DOMAIN][config_entry.entry_id]
@@ -38,8 +28,6 @@ async def async_setup_entry(hass, config_entry, async_add_devices):
     async_add_devices(
         [BJLEDLight(instance, config_entry.data["name"], config_entry.entry_id)]
     )
-    #config_entry.async_on_unload(await instance.stop())
-
 
 class BJLEDLight(LightEntity):
     def __init__(
@@ -52,8 +40,6 @@ class BJLEDLight(LightEntity):
         self._attr_brightness_step_pct = 10
         self._attr_name = name
         self._attr_unique_id = self._instance.mac
-        #self._color_temp_kelvin: self._instance._color_temp_kelvin
-        #self._instance.local_callback = self.light_local_callback
         
     @property
     def available(self):
@@ -64,25 +50,9 @@ class BJLEDLight(LightEntity):
     def brightness(self):
         return self._instance.brightness
     
-    # @property
-    # def brightness_step_pct(self):
-    #     return self._attr_brightness_step_pct
-    
     @property
     def is_on(self) -> Optional[bool]:
         return self._instance.is_on
-
-    # @property
-    # def color_temp_kelvin(self):
-    #     return self._instance.color_temp_kelvin
-
-    # @property
-    # def max_color_temp_kelvin(self):
-    #     return self._instance.max_color_temp_kelvin
-
-    # @property
-    # def min_color_temp_kelvin(self):
-    #     return self._instance.min_color_temp_kelvin
 
     @property
     def effect_list(self):
@@ -102,11 +72,6 @@ class BJLEDLight(LightEntity):
         """Flag supported color modes."""
         return self._attr_supported_color_modes
 
-    # @property
-    # def hs_color(self):
-    #     """Return the hs color value."""
-    #     return self._instance.hs_color
-
     @property
     def color_mode(self):
         """Return the color mode of the light."""
@@ -117,7 +82,6 @@ class BJLEDLight(LightEntity):
         """Return device info."""
         return DeviceInfo(
             identifiers={
-                # Serial numbers are unique identifiers within a specific domain
                 (DOMAIN, self._instance.mac)
             },
             name=self.name,
@@ -160,4 +124,3 @@ class BJLEDLight(LightEntity):
     async def async_update(self) -> None:
         await self._instance.update()
         self.async_write_ha_state()
-     

@@ -8,73 +8,111 @@ from bleak.exc import BleakDBusError
 from bleak_retry_connector import BLEAK_RETRY_EXCEPTIONS as BLEAK_EXCEPTIONS
 from bleak_retry_connector import (
     BleakClientWithServiceCache,
-    BleakError,
+    #BleakError,
     BleakNotFoundError,
-    ble_device_has_changed,
+    #ble_device_has_changed,
     establish_connection,
 )
 from typing import Any, TypeVar, cast, Tuple
 from collections.abc import Callable
-import traceback
+#import traceback
 import logging
 import colorsys
 
 
-# Add effects information in a separate file because there is a LOT of boilerplate.
-# from .effects import (
-#     EFFECT_MAP,
-#     EFFECT_LIST,
-#     EFFECT_ID_TO_NAME
-# )
-
 LOGGER = logging.getLogger(__name__)
 
-EFFECT_0x00 = "colorloop"
-EFFECT_0x01 = "red_fade"
-EFFECT_0x02 = "green_fade"
-EFFECT_0x03 = "blue_fade"
-EFFECT_0x04 = "yellow_fade"
-EFFECT_0x05 = "cyan_fade"
-EFFECT_0x06 = "purple_fade"
-EFFECT_0x07 = "white_fade"
-EFFECT_RED_GREEN_BLUE_CROSS_FADE = "rgb_cross_fade"
-EFFECT_0x08 = "rg_cross_fade"
-EFFECT_0x09 = "rb_cross_fade"
-EFFECT_0x0a = "gb_cross_fade"
-EFFECT_0x0c = "colorstrobe"
-EFFECT_0x0d = "red_strobe"
-EFFECT_0x0e = "green_strobe"
-EFFECT_0x0f = "blue_strobe"
-EFFECT_0x10 = "yellow_strobe"
-EFFECT_0x11 = "cyan_strobe"
-EFFECT_0x12 = "purple_strobe"
-EFFECT_0x13 = "white_strobe"
-EFFECT_CYCLE_RGB = "cycle_rgb"
-EFFECT_CYCLE_SEVEN_COLORS = "cycle_seven_colors"
-EFFECT_0x14 = "colorjump"
-EFFECT_CUSTOM = "custom"
+EFFECT_0x03_0x00 = "effect_0x03_0x00"
+EFFECT_0x03_0x01 = "effect_0x03_0x01"
+EFFECT_0x03_0x02 = "effect_0x03_0x02"
+EFFECT_0x03_0x03 = "effect_0x03_0x03"
+EFFECT_0x03_0x04 = "effect_0x03_0x04"
+EFFECT_0x03_0x05 = "effect_0x03_0x05"
+EFFECT_0x03_0x06 = "effect_0x03_0x06"
+EFFECT_0x03_0x07 = "effect_0x03_0x07"
+EFFECT_0x03_0x08 = "effect_0x03_0x08"
+EFFECT_0x03_0x09 = "effect_0x03_0x09"
+EFFECT_0x03_0x0a = "effect_0x03_0x0a"
+EFFECT_0x03_0x0b = "effect_0x03_0x0b"
+EFFECT_0x03_0x0c = "effect_0x03_0x0c"
+EFFECT_0x03_0x0d = "effect_0x03_0x0d"
+EFFECT_0x03_0x0e = "effect_0x03_0x0e"
+EFFECT_0x03_0x0f = "effect_0x03_0x0f"
+EFFECT_0x03_0x10 = "effect_0x03_0x10"
+EFFECT_0x03_0x11 = "effect_0x03_0x11"
+EFFECT_0x03_0x12 = "effect_0x03_0x12"
+EFFECT_0x03_0x13 = "effect_0x03_0x13"
+EFFECT_0x03_0x14 = "effect_0x03_0x14"
+EFFECT_0x03_0x15 = "effect_0x03_0x15"
+EFFECT_0x04_0x00 = "effect_0x04_0x00"
+EFFECT_0x04_0x01 = "effect_0x04_0x01"
+EFFECT_0x04_0x02 = "effect_0x04_0x02"
+EFFECT_0x04_0x03 = "effect_0x04_0x03"
+EFFECT_0x04_0x04 = "effect_0x04_0x04"
+EFFECT_0x04_0x05 = "effect_0x04_0x05"
+EFFECT_0x04_0x06 = "effect_0x04_0x06"
+EFFECT_0x04_0x07 = "effect_0x04_0x07"
+EFFECT_0x04_0x08 = "effect_0x04_0x08"
+EFFECT_0x04_0x09 = "effect_0x04_0x09"
+
+# EFFECT_0x00 = "colorloop"
+# EFFECT_0x01 = "red_fade"
+# EFFECT_0x02 = "green_fade"
+# EFFECT_0x03 = "blue_fade"
+# EFFECT_0x04 = "yellow_fade"
+# EFFECT_0x05 = "cyan_fade"
+# EFFECT_0x06 = "purple_fade"
+# EFFECT_0x07 = "white_fade"
+# EFFECT_RED_GREEN_BLUE_CROSS_FADE = "rgb_cross_fade"
+# EFFECT_0x08 = "rg_cross_fade"
+# EFFECT_0x09 = "rb_cross_fade"
+# EFFECT_0x0a = "gb_cross_fade"
+# EFFECT_0x0c = "colorstrobe"
+# EFFECT_0x0d = "red_strobe"
+# EFFECT_0x0e = "green_strobe"
+# EFFECT_0x0f = "blue_strobe"
+# EFFECT_0x10 = "yellow_strobe"
+# EFFECT_0x11 = "cyan_strobe"
+# EFFECT_0x12 = "purple_strobe"
+# EFFECT_0x13 = "white_strobe"
+# EFFECT_CYCLE_RGB = "cycle_rgb"
+# EFFECT_CYCLE_SEVEN_COLORS = "cycle_seven_colors"
+# EFFECT_0x14 = "colorjump"
+# EFFECT_0x15 = "custom"
+# EFFECT_CUSTOM = "custom"
 
 EFFECT_MAP = {
-    EFFECT_0x00:    0x00,
-    EFFECT_0x01:    0x01,
-    EFFECT_0x02:    0x02,
-    EFFECT_0x03:    0x03,
-    EFFECT_0x04:    0x04,
-    EFFECT_0x05:    0x05,
-    EFFECT_0x06:    0x06,
-    EFFECT_0x07:    0x07,
-    EFFECT_0x08:    0x08,
-    EFFECT_0x09:    0x09,
-    EFFECT_0x0a:    0x0a,
-    EFFECT_0x0c:    0x0c,
-    EFFECT_0x0d:    0x0d,
-    EFFECT_0x0e:    0x0e,
-    EFFECT_0x0f:    0x0f,
-    EFFECT_0x10:    0x10,
-    EFFECT_0x11:    0x11,
-    EFFECT_0x12:    0x12,
-    EFFECT_0x13:    0x13,
-    EFFECT_0x14:    0x14,
+    EFFECT_0x03_0x00:    (0x03,0x00),
+    EFFECT_0x03_0x01:    (0x03,0x01),
+    EFFECT_0x03_0x02:    (0x03,0x02),
+    EFFECT_0x03_0x03:    (0x03,0x03),
+    EFFECT_0x03_0x04:    (0x03,0x04),
+    EFFECT_0x03_0x05:    (0x03,0x05),
+    EFFECT_0x03_0x06:    (0x03,0x06),
+    EFFECT_0x03_0x07:    (0x03,0x07),
+    EFFECT_0x03_0x08:    (0x03,0x08),
+    EFFECT_0x03_0x09:    (0x03,0x09),
+    EFFECT_0x03_0x0a:    (0x03,0x0a),
+    EFFECT_0x03_0x0c:    (0x03,0x0c),
+    EFFECT_0x03_0x0d:    (0x03,0x0d),
+    EFFECT_0x03_0x0e:    (0x03,0x0e),
+    EFFECT_0x03_0x0f:    (0x03,0x0f),
+    EFFECT_0x03_0x10:    (0x03,0x10),
+    EFFECT_0x03_0x11:    (0x03,0x11),
+    EFFECT_0x03_0x12:    (0x03,0x12),
+    EFFECT_0x03_0x13:    (0x03,0x13),
+    EFFECT_0x03_0x14:    (0x03,0x14),
+    EFFECT_0x03_0x15:    (0x03,0x15),
+    EFFECT_0x04_0x00:    (0x04,0x00),
+    EFFECT_0x04_0x01:    (0x04,0x01),
+    EFFECT_0x04_0x02:    (0x04,0x02),
+    EFFECT_0x04_0x03:    (0x04,0x03),
+    EFFECT_0x04_0x04:    (0x04,0x04),
+    EFFECT_0x04_0x05:    (0x04,0x05),
+    EFFECT_0x04_0x06:    (0x04,0x06),
+    EFFECT_0x04_0x07:    (0x04,0x07),
+    EFFECT_0x04_0x08:    (0x04,0x08),
+    EFFECT_0x04_0x09:    (0x04,0x09)
 }
 
 EFFECT_LIST = sorted(EFFECT_MAP)
@@ -154,11 +192,6 @@ def retry_bluetooth_connection_error(func: WrapFuncType) -> WrapFuncType:
     return cast(WrapFuncType, _async_wrap_retry_bluetooth_connection_error)
 
 
-def rgb_to_hsv(r,g,b):
-    h, s, v = colorsys.rgb_to_hsv(r/255.0,g/255.0,b/255.0)
-    h, s, v = int(h*360), int(s*100), int(v*100)
-    return [h,s,v]
-
 class BJLEDInstance:
     def __init__(self, address, reset: bool, delay: int, hass) -> None:
         self.loop = asyncio.get_running_loop()
@@ -177,22 +210,16 @@ class BJLEDInstance:
         self._disconnect_timer: asyncio.TimerHandle | None = None
         self._cached_services: BleakGATTServiceCollection | None = None
         self._expected_disconnect = False
-        self._packet_counter = 0
         self._is_on = None
         self._rgb_color = None
         self._brightness = 255
         self._effect = None
         self._effect_speed = 0x64
-        self._color_temp_kelvin = None
         self._color_mode = ColorMode.RGB
         self._write_uuid = None
-        self._read_uuid = None
         self._turn_on_cmd = None
         self._turn_off_cmd = None
-        self._max_color_temp_kelvin = None
-        self._min_color_temp_kelvin = None
         self._model = self._detect_model()
-        #self._on_update_callbacks = []
         
         LOGGER.debug(
             "Model information for device %s : ModelNo %s. MAC: %s",
@@ -207,8 +234,6 @@ class BJLEDInstance:
             if self._device.name.lower().startswith(name.lower()):
                 self._turn_on_cmd = TURN_ON_CMD[x]
                 self._turn_off_cmd = TURN_OFF_CMD[x]
-                #self._max_color_temp_kelvin = MAX_COLOR_TEMPS_K[x]
-                #self._min_color_temp_kelvin = MIN_COLOR_TEMPS_K[x]
                 return x
             x = x + 1
 
@@ -220,7 +245,6 @@ class BJLEDInstance:
     async def _write_while_connected(self, data: bytearray):
         LOGGER.debug(f"Writing data to {self.name}: {data}")
         await self._client.write_gatt_char(self._write_uuid, data, False)
-    
     
     @property
     def mac(self):
@@ -249,22 +273,6 @@ class BJLEDInstance:
     @property
     def rgb_color(self):
         return self._rgb_color
-    
-    @property
-    def min_color_temp_kelvin(self):
-        return self._min_color_temp_kelvin
-
-    @property
-    def max_color_temp_kelvin(self):
-        return self._max_color_temp_kelvin
-
-    @property
-    def color_temp_kelvin(self):
-        return self._color_temp_kelvin
-
-    @property
-    def hs_color(self):
-        return self._hs_color
 
     @property
     def effect_list(self) -> list[str]:
@@ -298,11 +306,11 @@ class BJLEDInstance:
         rgb_packet.append(blue)
         await self._write(rgb_packet)
 
-    async def set_brightness_local(self, value: int):
-        # 0 - 255, should convert automatically with the hex calls
-        # call color temp or rgb functions to update
-        self._brightness = value
-        await self.set_rgb_color(self._rgb_color, value)
+    # async def set_brightness_local(self, value: int):
+    #     # 0 - 255, should convert automatically with the hex calls
+    #     # call color temp or rgb functions to update
+    #     self._brightness = value
+    #     await self.set_rgb_color(self._rgb_color, value)
 
     @retry_bluetooth_connection_error
     async def turn_on(self):
@@ -320,12 +328,13 @@ class BJLEDInstance:
             LOGGER.error("Effect %s not supported", effect)
             return
         self._effect = effect
-        effect_packet = bytearray.fromhex("69 96 03 03")
+        effect_packet = bytearray.fromhex("69 96 03")
         effect_id = EFFECT_MAP.get(effect)
         LOGGER.debug('Effect ID: %s', effect_id)
         LOGGER.debug('Effect name: %s', effect)
-        effect_packet.append(effect_id)
-        effect_packet.append(0x01) # FIXME: Need to support speed in here too, but can't because there isn't the ability in HA to specify it as far as I can tell.
+        effect_packet.append(effect_id[0])
+        effect_packet.append(effect_id[1])
+        effect_packet.append(0x03) # Between 0 and 10
         await self._write(effect_packet)
 
     @retry_bluetooth_connection_error
@@ -341,18 +350,7 @@ class BJLEDInstance:
     @retry_bluetooth_connection_error
     async def update(self):
         LOGGER.debug("%s: Update in bjled called", self.name)
-        # try:
-        #     await self._ensure_connected()
-        #     self._is_on = False
-        #     self._brightness = 255
-        #     self._rgb_color = (255,0,0)
-        #     self._effect = None
-
-        # except Exception as error:
-        #     self._is_on = None # failed to connect, this should mark it as unavailable
-        #     LOGGER.error("Error getting status: %s", error)
-        #     track = traceback.format_exc()
-        #     LOGGER.debug(track)
+        # I dont think we have anything to update
 
     async def _ensure_connected(self) -> None:
         """Ensure connection to device is established."""
@@ -389,22 +387,8 @@ class BJLEDInstance:
             self._client = client
             self._reset_disconnect_timer()
 
-            # # Subscribe to notification is needed for LEDnetWF devices to accept commands
-            # self._notification_callback = self._notification_handler
-            # await client.start_notify(self._read_uuid, self._notification_callback)
-            # LOGGER.debug("%s: Subscribed to notifications", self.name)
-            
-            # Send initial packets to device to see if it sends notifications
-            # LOGGER.debug("%s: Send initial packets", self.name)
-            # await self._write_while_connected(INITIAL_PACKET)
-
     def _resolve_characteristics(self, services: BleakGATTServiceCollection) -> bool:
         """Resolve characteristics."""
-        # for characteristic in NOTIFY_CHARACTERISTIC_UUIDS:
-        #     if char := services.get_characteristic(characteristic):
-        #         self._read_uuid = char
-        #         LOGGER.debug("%s: Read UUID: %s", self.name, self._read_uuid)
-        #         break
         for characteristic in WRITE_CHARACTERISTIC_UUIDS:
             if char := services.get_characteristic(characteristic):
                 self._write_uuid = char
@@ -458,27 +442,8 @@ class BJLEDInstance:
             self._expected_disconnect = True
             self._client = None
             self._write_uuid = None
-            # self._read_uuid = None
             if client and client.is_connected:
-                # await client.stop_notify(read_char) #  TODO:  I don't think this is needed.  Bleak docs say it isnt.
                 await client.disconnect()
             LOGGER.debug("%s: Disconnected", self.name)
     
-    def normalize_brightness(self, new_brightness):
-        "Make sure brightness is between 2 and 255 and then convert to percentage"
-        LOGGER.debug("Doing Normalizing brightness function")
-        LOGGER.debug("New brightness passed IN is %s", new_brightness)
-        if new_brightness is None and self._brightness is None:
-            new_brightness = 255
-        elif new_brightness is None and self._brightness > 1:
-            new_brightness = self._brightness
-        if new_brightness < 2:
-            new_brightness = 2
-        if new_brightness > 255:
-            new_brightness = 255
-        LOGGER.debug("New brightness (0-255) is %s", new_brightness)
-        self._brightness = new_brightness
-        new_percentage = int(new_brightness * 100 / 255)
-        LOGGER.debug("Normalized brightness percent is %s", new_percentage)
-        return new_percentage
     

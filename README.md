@@ -8,6 +8,43 @@ These were the cheapest LEDs I could find on AliExpress.  5M of 5050 LEDs for £
 
 I figured it should be pretty easy to get them working, and it was.  I have no intention of adding this to HACS in any offical capacity, but it should work when you add this repo as a custom repo in HACS.
 
+There are some btsnoop HCI logs in the `bt_snoops` folder if you want to examine them.
+
+## Bluetooth LE commands
+
+`69 96 06 01 01`                 - On
+`69 96 02 01 00`                 - Off
+
+### Colours
+
+```
+|---------| -------------------- header
+|         | ||------------------ red
+|         | || ||--------------- green
+|         | || || ||------------ blue
+|         | || || || ||--------- white
+69 96 05 02 7f 00 00 7f        - red
+69 96 05 02 00 7f 00 7f        - green
+69 96 05 02 00 00 7f 7f        - blue
+69 96 05 02 ff ff ff ff        - white
+```
+
+In fact, you only need to provide RGB and can skip the last byte.  Since these strips don't have an white LED, it's easier to make sense of the shorter packet.
+
+### Mode
+
+```
+|-----|---- -------------------- header
+|     |  ||-||------------------ mode
+|     |  ||-|| ||--------------- speed
+69 96 03 04 02 01
+69 96 03 04 01 01
+```
+
+Mode are numbered `03 00` to `03 15` and `04 00` to `04 09`
+
+Speed is 01 fast to 0a slow.  There are values accepted above this, but strange things happen.
+
 ## Supported devices
 
 This has only been tested with a single generic LED strip from Ali Express.
@@ -44,15 +81,15 @@ You need to have the bluetooth component configured and working in Home Assistan
 Clone this repository into `config/custom_components/BJ_LED` Home Assistant folder.
 
 ### Config
-After setting up, you can config two parameters Settings -> Integrations -> BJ_LED -> Config.
 
+After setting up, you can config two parameters Settings -> Integrations -> BJ_LED -> Config.
 
 ## Credits
 
 This integration was possible thanks to the work done by raulgbcr in this repo:
 
-https://github.com/raulgbcr/lednetwf_ble
+<https://github.com/raulgbcr/lednetwf_ble>
 
 which in turn is thanks to:
 
-https://github.com/dave-code-ruiz/elkbledom for most of the base code adapted to this integration.
+<https://github.com/dave-code-ruiz/elkbledom> for most of the base code adapted to this integration.
