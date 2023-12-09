@@ -6,7 +6,7 @@
                     "mac": "Device:",
                     "name": "Name"
                 },
-                "title": "Pick a light. Make sure light in sight for validation."
+                "title": "Choose a device."
             },
             "validate": {
                 "data": {
@@ -17,7 +17,7 @@
             },
             "manual": {
                 "data": {
-                    "mac": "Bluetooth MAC address",
+                    "mac": "BJ_LED device:",
                     "name": "Name"
                 },
                 "title": "Enter bluetooth MAC address"

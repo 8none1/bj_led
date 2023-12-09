@@ -67,7 +67,6 @@ class BJLEDFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         await self.async_set_unique_id(discovery_info.address)
         self._abort_if_unique_id_configured()
         device = DeviceData(discovery_info)
-        #self.context["title_placeholders"] = {"name": human_readable_name(None, device.name(), device.address())}
         self.context["title_placeholders"] = {"name": device.name()}
         if device.supported():
             self._discovered_devices.append(device)

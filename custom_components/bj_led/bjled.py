@@ -393,7 +393,7 @@ class BJLEDInstance:
             if char := services.get_characteristic(characteristic):
                 self._write_uuid = char
                 break
-        return bool(self._read_uuid and self._write_uuid)
+        return bool(self._write_uuid)
 
     def _reset_disconnect_timer(self) -> None:
         """Reset disconnect timer."""
