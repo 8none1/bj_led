@@ -76,9 +76,16 @@ The discovery of the light's state requires that the device be able to tell us w
 
 You need to have the bluetooth component configured and working in Home Assistant in order to use this integration.
 
-### Manual installation
+### HACS
 
-Clone this repository into `config/custom_components/BJ_LED` Home Assistant folder.
+Add this repo to HACS as a custom repo.  Click through:
+
+- HACS -> Integrations -> Top right menu -> Custom Repositories
+- Paste the Github URL to this repo in to the Repository box
+- Choose category `Integration`
+- Click Add
+- Restart Home Assistant
+- BJ_LED devices should start to appear in your Integrations page
 
 ### Config
 

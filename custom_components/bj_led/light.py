@@ -51,6 +51,10 @@ class BJLEDLight(LightEntity):
         return self._instance.brightness
     
     @property
+    def rgb_color(self):
+        return self._instance.rgb_color
+    
+    @property
     def is_on(self) -> Optional[bool]:
         return self._instance.is_on
 
