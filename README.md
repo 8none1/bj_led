@@ -34,14 +34,14 @@ In fact, you only need to provide RGB and can skip the last byte.  Since these s
 ### Mode
 
 ```
-|-----|---- -------------------- header
-|     |  ||-||------------------ mode
-|     |  ||-|| ||--------------- speed
-69 96 03 04 02 01
-69 96 03 04 01 01
+|-----|------------------------- header
+|     |     |------------------- mode
+|     |     |  ||--------------- speed
+69 96 03 03 02 01
+69 96 03 03 01 01
 ```
 
-Mode are numbered `03 00` to `03 15` and `04 00` to `04 09`
+Mode are numbered `00` to `15`.
 
 Speed is 01 fast to 0a slow.  There are values accepted above this, but strange things happen.
 
