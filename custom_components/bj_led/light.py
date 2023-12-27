@@ -102,7 +102,7 @@ class BJLEDLight(LightEntity):
                 
         if ATTR_BRIGHTNESS in kwargs and kwargs[ATTR_BRIGHTNESS] != self.brightness:
             self._brightness = kwargs[ATTR_BRIGHTNESS]
-            await self._instance.set_brightness_local(kwargs[ATTR_BRIGHTNESS])
+            await self._instance.set_brightness_local(kwargs[ATTR_BRIGHTNESS])# FIXME
                
         if ATTR_RGB_COLOR in kwargs:
             if kwargs[ATTR_RGB_COLOR] != self.rgb_color:

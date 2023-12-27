@@ -1,8 +1,7 @@
 {
     "name": "BJ LED",
     "content_in_root": false,
-    "zip_release": true,
-    "filename": "bjled.zip",
+    "zip_release": false,
     "render_readme": true,
     "homeassistant": "2023.11.0",
     "hacs": "1.33.0"   
