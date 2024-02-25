@@ -100,3 +100,12 @@ This integration was possible thanks to the work done by raulgbcr in this repo:
 which in turn is thanks to:
 
 <https://github.com/dave-code-ruiz/elkbledom> for most of the base code adapted to this integration.
+
+## Other projects that might be of interest
+
+- [iDotMatrix](https://github.com/8none1/idotmatrix)
+- [Zengge LEDnet WF](https://github.com/8none1/zengge_lednetwf)
+- [iDealLED](https://github.com/8none1/idealLED)
+- [BJ_LED](https://github.com/8none1/bj_led)
+- [ELK BLEDOB](https://github.com/8none1/elk-bledob)
+
