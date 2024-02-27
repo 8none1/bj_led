@@ -108,4 +108,5 @@ which in turn is thanks to:
 - [iDealLED](https://github.com/8none1/idealLED)
 - [BJ_LED](https://github.com/8none1/bj_led)
 - [ELK BLEDOB](https://github.com/8none1/elk-bledob)
+- [HiLighting LED](https://github.com/8none1/hilighting_homeassistant)
 
