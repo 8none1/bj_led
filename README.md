@@ -87,10 +87,6 @@ Add this repo to HACS as a custom repo.  Click through:
 - Restart Home Assistant
 - BJ_LED devices should start to appear in your Integrations page
 
-### Config
-
-After setting up, you can config two parameters Settings -> Integrations -> BJ_LED -> Config.
-
 ## Credits
 
 This integration was possible thanks to the work done by raulgbcr in this repo:
