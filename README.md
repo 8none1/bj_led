@@ -56,7 +56,7 @@ MAC address seem to start `FF:FF:xx:xx:xx:xx`.
 
 - On/Off
 - RGB colour
-- Brightness
+- Brightness (see known issues)
 - Fancy colour Modes (not speed)
 - Automatic discovery of supported devices
 
@@ -69,6 +69,10 @@ MAC address seem to start `FF:FF:xx:xx:xx:xx`.
 The timer/clock functions are understandable from the HCI Bluetooth logs but adding that functionality seems pointless and I don't think Home Assistant would support it any way.
 
 The discovery of the light's state requires that the device be able to tell us what state it is in.  The BT controller on the device does report that it has `notify` capabilities but I have not been able to get it to report anything at all.  Perhaps you will have more luck.  Until this is solved, we have to use these lights in `optimistic` mode and assume everything just worked.  Looking at HCI logs from the Android app it doesn't even try to enable notifications and never receives a packet from the light.
+
+## Known Issues
+
+- Brightness handling is very basic.  Brightness is handled by scaling the colour values.  Changing the brightness while an effect is showing will stop the effect.  This should be easy enough to fix, just I haven't done it yet.
 
 ## Installation
 
