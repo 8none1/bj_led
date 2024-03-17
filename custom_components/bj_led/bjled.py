@@ -262,11 +262,11 @@ class BJLEDInstance:
         rgb_packet.append(blue)
         await self._write(rgb_packet)
 
-    # async def set_brightness_local(self, value: int):
-    #     # 0 - 255, should convert automatically with the hex calls
-    #     # call color temp or rgb functions to update
-    #     self._brightness = value
-    #     await self.set_rgb_color(self._rgb_color, value)
+    async def set_brightness_local(self, value: int):
+        # 0 - 255, should convert automatically with the hex calls
+        # call color temp or rgb functions to update
+        self._brightness = value
+        await self.set_rgb_color(self._rgb_color, value)
 
     @retry_bluetooth_connection_error
     async def turn_on(self):

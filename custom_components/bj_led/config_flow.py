@@ -97,7 +97,7 @@ class BJLEDFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 for each in self._discovered_devices:
                   LOGGER.debug(f"Address: {each.address()}")
                   if each.address() == self.mac:
-                    self.name = self._discovered_devices[0].get_device_name()
+                    self.name = each.get_device_name()
             if self.name is None: self.name = "BJ_LEDx"
             await self.async_set_unique_id(self.mac, raise_on_progress=False)
             self._abort_if_unique_id_configured()
