@@ -25,7 +25,7 @@ DATA_SCHEMA = vol.Schema({("host"): str})
 class DeviceData(BluetoothData):
     def __init__(self, discovery_info) -> None:
         self._discovery = discovery_info
-        LOGGER.debug("Discovered bluetooth devices, DeviceData, : %s , %s", self._discovery.address, self._discovery.name)
+        #LOGGER.debug("Discovered bluetooth devices, DeviceData, : %s , %s", self._discovery.address, self._discovery.name)
 
     def supported(self):
         return self._discovery.name.lower().startswith("bj_led")
@@ -63,7 +63,7 @@ class BJLEDFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         self, discovery_info: BluetoothServiceInfoBleak
     ) -> FlowResult:
         """Handle the bluetooth discovery step."""
-        LOGGER.debug("Discovered bluetooth devices, step bluetooth, : %s , %s", discovery_info.address, discovery_info.name)
+        #LOGGER.debug("Discovered bluetooth devices, step bluetooth, : %s , %s", discovery_info.address, discovery_info.name)
         await self.async_set_unique_id(discovery_info.address)
         self._abort_if_unique_id_configured()
         device = DeviceData(discovery_info)
@@ -86,9 +86,19 @@ class BJLEDFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Handle the user step to pick discovered device."""
+        LOGGER.debug(f"step_user context: {self.context}")
         if user_input is not None:
             self.mac = user_input[CONF_MAC]
-            self.name = self.context["title_placeholders"]["name"]
+            LOGGER.debug(f"MAC address: {self.mac}")
+            if "title_placeholders" in self.context.keys() :
+                self.name = self.context["title_placeholders"]["name"]
+            if 'source' in self.context.keys() and self.context['source'] == 'user':
+                LOGGER.debug(f"User context.  discovered devices: {self._discovered_devices}")
+                for each in self._discovered_devices:
+                  LOGGER.debug(f"Address: {each.address()}")
+                  if each.address() == self.mac:
+                    self.name = self._discovered_devices[0].get_device_name()
+            if self.name is None: self.name = "BJ_LEDx"
             await self.async_set_unique_id(self.mac, raise_on_progress=False)
             self._abort_if_unique_id_configured()
             return await self.async_step_validate()

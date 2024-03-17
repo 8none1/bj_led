@@ -28,7 +28,8 @@
         },
         "abort": {
             "cannot_validate": "Unable to validate",
-            "cannot_connect": "Unable to connect"
+            "cannot_connect": "Unable to connect",
+            "already_configured" : "Device already configured"
         }
     },
     "options": {
