@@ -6,6 +6,8 @@ These were the cheapest Bluetooth controlled LEDs I could find on AliExpress.  5
 
 ![image](https://github.com/8none1/bj_led/assets/6552931/686eff8b-ab87-4327-b784-ed91d695f957)
 
+![image](https://github.com/8none1/bj_led/assets/6552931/74e43dbb-92ab-4d58-bf10-55d789e259d4)
+
 I figured it should be pretty easy to get them working, and it was.  I have no intention of adding this to HACS in any official capacity, but it should work when you add this repo as a custom repo in HACS.
 
 There are some btsnoop HCI logs in the `bt_snoops` folder if you want to examine them.
