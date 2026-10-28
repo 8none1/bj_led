@@ -379,6 +379,9 @@ class BJLEDInstance:
     async def stop(self) -> None:
         """Stop the LEDBLE."""
         LOGGER.debug("%s: Stop", self.name)
+        if self._disconnect_timer:
+            self._disconnect_timer.cancel()
+            self._disconnect_timer = None
         await self._execute_disconnect()
 
     async def _execute_timed_disconnect(self) -> None:
