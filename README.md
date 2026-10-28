@@ -74,6 +74,11 @@ The discovery of the light's state requires that the device be able to tell us w
 
 ## Known Issues
 
+- **Fixed in 0.0.2 – strip stops responding after a long idle.** Previously the integration opened one Bluetooth connection and held it open forever (the disconnect delay was never set, and the Configure dialog crashed on Home Assistant 2025.12+ with `AttributeError: property 'config_entry' of 'OptionsFlowHandler' object has no setter`). After many hours on the same connection the controller can silently ignore commands, and because these strips give no feedback, Home Assistant still shows the light as on. From 0.0.2:
+  - the connection is closed after **120 seconds** of inactivity by default, and the next command opens a fresh one (this adds a second or two to the first command after an idle period);
+  - the delay can be changed under *Settings → Devices & services → BJ_LED → Configure* (`0` = never disconnect, the old behaviour) and takes effect immediately;
+  - requires Home Assistant 2024.12 or newer.
+
 - Brightness handling is very basic.  Brightness is handled by scaling the colour values.  Changing the brightness while an effect is showing will stop the effect.  This should be easy enough to fix, just I haven't done it yet.
 
 ## Installation
