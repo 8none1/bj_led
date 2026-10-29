@@ -1,0 +1,4 @@
+pytest-homeassistant-custom-component
+bluetooth-sensor-state-data
+bluetooth-data-tools
+home-assistant-bluetooth
