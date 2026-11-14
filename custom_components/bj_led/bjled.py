@@ -243,13 +243,15 @@ class BJLEDInstance:
         return self._color_mode
 
     @retry_bluetooth_connection_error
-    async def set_rgb_color(self, rgb: Tuple[int, int, int], brightness: int | None = None):
-        self._rgb_color = rgb
+    async def set_rgb_color(self, rgb: Tuple[int, int, int] | None = None, brightness: int | None = None):
+        # Either argument may be omitted: fall back to the last known value so
+        # a brightness-only change before any colour was set can't crash.
+        if rgb is None:
+            rgb = self._rgb_color or (255, 255, 255)
         if brightness is None:
-            if self._brightness is None:
-                self._brightness = 255
-            else:
-                brightness = self._brightness
+            brightness = self._brightness if self._brightness is not None else 255
+        self._rgb_color = rgb
+        self._brightness = brightness
         brightness_percent = int(brightness * 100 / 255)
         # Now adjust the RBG values to match the brightness
         red = int(rgb[0] * brightness_percent / 100)
@@ -263,10 +265,8 @@ class BJLEDInstance:
         await self._write(rgb_packet)
 
     async def set_brightness_local(self, value: int):
-        # 0 - 255, should convert automatically with the hex calls
-        # call color temp or rgb functions to update
-        self._brightness = value
-        await self.set_rgb_color(self._rgb_color, value)
+        # Brightness is baked into the RGB packet, so just resend the colour.
+        await self.set_rgb_color(None, value)
 
     @retry_bluetooth_connection_error
     async def turn_on(self):
