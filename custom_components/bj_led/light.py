@@ -100,16 +100,15 @@ class BJLEDLight(LightEntity):
         if not self.is_on:
             await self._instance.turn_on()
                 
-        if ATTR_BRIGHTNESS in kwargs and kwargs[ATTR_BRIGHTNESS] != self.brightness:
-            self._brightness = kwargs[ATTR_BRIGHTNESS]
-            await self._instance.set_brightness_local(kwargs[ATTR_BRIGHTNESS])# FIXME
-               
-        if ATTR_RGB_COLOR in kwargs:
-            if kwargs[ATTR_RGB_COLOR] != self.rgb_color:
+        # Brightness and colour travel in one RGB packet, so send a single
+        # BLE write instead of one per attribute (halves colour-change latency).
+        if ATTR_RGB_COLOR in kwargs or ATTR_BRIGHTNESS in kwargs:
+            if ATTR_RGB_COLOR in kwargs:
                 self._effect = None
-                bri = kwargs[ATTR_BRIGHTNESS] if ATTR_BRIGHTNESS in kwargs else None
-                await self._instance.set_rgb_color(kwargs[ATTR_RGB_COLOR], bri)
-        
+            await self._instance.set_rgb_color(
+                kwargs.get(ATTR_RGB_COLOR), kwargs.get(ATTR_BRIGHTNESS)
+            )
+
         if ATTR_EFFECT in kwargs:
             if kwargs[ATTR_EFFECT] != self.effect:
                 self._effect = kwargs[ATTR_EFFECT]
